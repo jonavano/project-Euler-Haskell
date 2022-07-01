@@ -17,3 +17,10 @@ evenFib = filter even fibSequence
 lessThan4Mill = takeWhile (< 4000000) evenFib
 
 evenFibonacciNumbers = sum lessThan4Mill
+---
+
+sumOfSquares = sum [x **2|x <- [1..100]]
+
+squareOfSum = sum [1..100] ** 2
+
+sumSquareDifference = squareOfSum - sumOfSquares
