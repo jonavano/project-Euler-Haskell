@@ -103,3 +103,7 @@ largestPalindromeProduct :: [Int]
 largestPalindromeProduct = [x * y | x <- [100 ..999], y <- [100..999], palindrome (splitNum(x * y))]
 
 reallyLongestPalindrome = sort largestPalindromeProduct
+
+---------
+--Problem 7: 10001st prime
+prime10001 = listPrimes !! 10001
