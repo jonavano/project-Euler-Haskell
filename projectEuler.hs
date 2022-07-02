@@ -107,3 +107,33 @@ reallyLongestPalindrome = sort largestPalindromeProduct
 ---------
 --Problem 7: 10001st prime
 prime10001 = listPrimes !! 10001
+
+---
+--Problem 9: Special Pythagorean triplet
+-- the easiest way of finding an higher Pythagorean triplet, is to multiply the original tripled
+-- a**2 + b**2 = c**2 = (3,4,5)
+multiplicationFactor = 500/5
+
+pythagoreanTriplet = [3,4,5]
+
+-- specialTriplet :: Integer -> [Integer]
+specialTriplet a = map (*a) pythagoreanTriplet
+
+productOfList :: Num a => [a] -> a
+productOfList (x:sx) = x * productOfList sx
+productOfList _ = 1
+
+-- isSum1000 :: Ord a => [Int] -> Int -> [Int]
+-- isSum1000 :: [[GHC.Types.Any]] -> [GHC.Types.Any] -> [[GHC.Types.Any]]
+-- isSum1000 :: [Integer] -> Integer -> [Integer] Integer
+-- isSum1000 :: [Integer] -> Integer -> ([Integer], Integer)
+isSum1000 :: [Double] -> Double -> ([Double], Double)
+isSum1000 _ a | a <= 0 = ([], 0)
+isSum1000 (x:sx) a | sum (x:sx) >= 1000 = (x:sx, a)
+isSum1000 (x:sx) a | sum (x:sx) >= 900 = isSum1000 (specialTriplet (a+0.01)) (a+0.01)
+isSum1000 (x:sx) a = isSum1000 (specialTriplet (a+1)) (a+1)
+isSum1000 _ _ = ([], 0)
+
+-- This was the correct solution, and didn't take long either
+-- Ignore the rest of the code :)
+isPythagoras = [(x, y, z) | x <- [1..500], y <- [1..500], z <- [1..500], x + y + z == 1000, x**2 + y**2 == z**2]
