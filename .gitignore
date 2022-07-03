@@ -1,3 +1,6 @@
 /Readme.md
 /helloworld
 /tutorial.hs
+primes
+*.hi
+*.o

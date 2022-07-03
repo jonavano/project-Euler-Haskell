@@ -1,6 +1,7 @@
 import Distribution.Simple.Utils (xargs)
 import GHC.Float
 import Data.List ( sort )
+import Distribution.Simple.Command (OptDescr(BoolOpt))
 
 dividesBy3Or5 :: [Integer]
 dividesBy3Or5 = [x | x <- [1 .. 999], x `mod` 3 == 0 || x `mod` 5 == 0]
@@ -54,6 +55,7 @@ notDividesBy input divider = not (dividesBy input divider)
 isDivisibleForNone 1 = True
 isDivisibleForNone 2 = True
 isDivisibleForNone x = length (takeWhile (notDividesBy x) [2 .. (x - 1)]) == (x -2)
+
 
 isDivisibleBy x a | a <= 1 = isDivisibleBy x (a + 1)
 isDivisibleBy x a | x == a = x
@@ -151,3 +153,24 @@ bigNumberList = splitNum bigNumber
 largestProductInSeries highestProduct lengthSeries (x:sx) | productOfList (take lengthSeries (x:sx)) > highestProduct =   largestProductInSeries (productOfList (take lengthSeries (x:sx))) lengthSeries sx
 largestProductInSeries highestProduct lengthSeries (x:sx) = largestProductInSeries highestProduct lengthSeries sx
 largestProductInSeries highestProduct _ _ = highestProduct
+
+---------------------------
+-- Problem 10: summation Primes
+
+primesLessThan2Mill a = takeWhile (< a) primes
+
+sumOfPrimes a = sum (primesLessThan2Mill a)
+
+primes :: [Integer]
+primes = 2: 3: 5: 7: [x | x <- [11..], forAll (dividesBy x) (takeWhile (\a -> sqrt (fromIntegral x) > fromIntegral a) primes)]
+
+
+forAll :: (a -> Bool) -> [a] -> Bool
+forAll bool (x:sx)
+  | not (bool x) = forAll bool sx
+  | otherwise = False
+forAll _ _ = True
+
+checkPrimality :: Integer -> Bool
+checkPrimality x = forAll (dividesBy x) (takeWhile (\a -> sqrt (fromIntegral x) > fromIntegral a) primes)
+-- checkPrimality x = forAll (dividesBy x) (takeWhile (< sqrt x) primes)
