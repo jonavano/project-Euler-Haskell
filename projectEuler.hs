@@ -2,6 +2,7 @@ import Distribution.Simple.Utils (xargs)
 import GHC.Float
 import Data.List ( sort )
 import Distribution.Simple.Command (OptDescr(BoolOpt))
+import Distribution.Parsec.Position (positionCol)
 
 dividesBy3Or5 :: [Integer]
 dividesBy3Or5 = [x | x <- [1 .. 999], x `mod` 3 == 0 || x `mod` 5 == 0]
@@ -173,4 +174,11 @@ forAll _ _ = True
 
 checkPrimality :: Integer -> Bool
 checkPrimality x = forAll (dividesBy x) (takeWhile (\a -> sqrt (fromIntegral x) > fromIntegral a) primes)
--- checkPrimality x = forAll (dividesBy x) (takeWhile (< sqrt x) primes)
+
+------------------------------------
+-- Problem 16: Power digit sum
+
+-- powerDigitSum :: (Integral a, Floating a) => a -> a
+powerDigitSum n = sum (splitNum (round (2 ** n)))
+
+powerDigitSumThousand = powerDigitSum 1000
