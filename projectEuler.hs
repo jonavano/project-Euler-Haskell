@@ -1,6 +1,6 @@
 import Distribution.Simple.Utils (xargs)
 import GHC.Float
-import Data.List ( sort )
+import Data.List ( sort, group )
 import Distribution.Simple.Command (OptDescr(BoolOpt))
 import Distribution.Parsec.Position (positionCol)
 import Data.Time.Format.ISO8601 (yearFormat)
@@ -65,9 +65,9 @@ isDivisibleBy x a | x == a = x
 isDivisibleBy x a | mod x a == 0 = a
 isDivisibleBy x a = isDivisibleBy x (a + 1)
 
-isPrime :: Int -> Bool
-isPrime 1 = True
-isPrime x = isDivisibleBy x 2 == x --length (isDivisibleForNone x) == (x - 1)
+-- isPrime :: Int -> Bool
+-- isPrime 1 = True
+-- isPrime x = isDivisibleBy x 2 == x --length (isDivisibleForNone x) == (x - 1)
 
 -- isPrime' :: [Int] -> Int -> Bool
 -- isPrime' _ 1 = True
@@ -76,8 +76,8 @@ isPrime x = isDivisibleBy x 2 == x --length (isDivisibleForNone x) == (x - 1)
 -- isPrime' (x:sx) a = isPrime' sx a
 -- isPrime' _ _ = True
 
-listPrimes :: [Int]
-listPrimes = 1 : 2 : [x | x <- [3 ..], isPrime x]
+-- listPrimes :: [Int]
+-- listPrimes = 1 : 2 : [x | x <- [3 ..], isPrime x]
 
 -- largestPrimeFactor :: [Int] -> int -> [Int]
 largestPrimeFactor :: Integral t => [t] -> t -> [t]
@@ -112,7 +112,7 @@ reallyLongestPalindrome = sort largestPalindromeProduct
 
 ---------
 --Problem 7: 10001st prime
-prime10001 = listPrimes !! 10001
+prime10001 = primes !! 10001
 
 ---
 --Problem 9: Special Pythagorean triplet
@@ -166,6 +166,9 @@ sumOfPrimes a = sum (primesLessThan2Mill a)
 
 primes :: [Integer]
 primes = 2: 3: 5: 7: [x | x <- [11..], forAll (dividesBy x) (takeWhile (\a -> sqrt (fromIntegral x) > fromIntegral a) primes)]
+
+primesToN ::Integer -> [Integer]
+primesToN n = 2: 3: 5: 7: [x | x <- [11..n], forAll (dividesBy x) (takeWhile (\a -> sqrt (fromIntegral x) > fromIntegral a) primes)]
 
 
 forAll :: (a -> Bool) -> [a] -> Bool
@@ -397,4 +400,48 @@ maximums = foldr1 (\(x, x2) (y, y2) ->if x2 >= y2 then (x,x2) else (y,y2)) colla
 
 maximumsT :: (Int, Int)
 maximumsT = foldr1 (\(x, x2) (y, y2) ->if x2 >= y2 then (x,x2) else (y,y2)) collatzListBaby
+
+-----
+-- Problem 12: Highly divisible triangular number
+
+allNumbersTo n = [1..n]
+
+-- This is the simple calculation of the triangle numbers
+triangleNumbers' = [sum (allNumbersTo x) | x <- [1..]]
+
+triangleNumbers = [(n * (n + 1) )`div` 2 | n <- [1..]]
+
+
+naturalFactors input = [x | x <- [1..input], dividesBy input x]
+
+
+triangleNumbersFactorsLength = [(x, amountOfFactors x)| x <- triangleNumbers]
+
+highlyDivisibleTriangularNumber n = [(a,b) | (a,b) <- takeWhile (\(c,d) -> d <= n) triangleNumbersFactorsLength, b == n]
+
+main = do
+  -- print (takeWhile (\(c,d) -> d <= 500) triangleNumbersFactorsLength)
+  print (highlyDivisibleTriangularNumber 100)
+  print (highlyDivisibleTriangularNumber 250)
+
+
+  print (highlyDivisibleTriangularNumber 500)
+  print (highlyDivisibleTriangularNumber 501)
+
+
+primeFactors input = primeFactors' input primes
+
+primeFactors' _ [] = []
+primeFactors' input (x:xs) 
+  | x * x > input = [input]
+  | r == 0 = x : primeFactors' q (x:xs)
+  | otherwise = primeFactors' input xs
+  where (q, r) = quotRem input x
+
+
+-- countFactors :: [[a]] -> Int
+countFactors input = sum factors * length factors
+  where factors = [length x | x <- input]
+
+amountOfFactors x = countFactors (group (primeFactors x))
 
