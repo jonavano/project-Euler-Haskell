@@ -404,44 +404,6 @@ maximumsT = foldr1 (\(x, x2) (y, y2) ->if x2 >= y2 then (x,x2) else (y,y2)) coll
 -----
 -- Problem 12: Highly divisible triangular number
 
-allNumbersTo n = [1..n]
-
--- This is the simple calculation of the triangle numbers
-triangleNumbers' = [sum (allNumbersTo x) | x <- [1..]]
-
-triangleNumbers = [(n * (n + 1) )`div` 2 | n <- [1..]]
 
 
-naturalFactors input = [x | x <- [1..input], dividesBy input x]
-
-
-triangleNumbersFactorsLength = [(x, amountOfFactors x)| x <- triangleNumbers]
-
-highlyDivisibleTriangularNumber n = [(a,b) | (a,b) <- takeWhile (\(c,d) -> d <= n) triangleNumbersFactorsLength, b == n]
-
-main = do
-  -- print (takeWhile (\(c,d) -> d <= 500) triangleNumbersFactorsLength)
-  print (highlyDivisibleTriangularNumber 100)
-  print (highlyDivisibleTriangularNumber 250)
-
-
-  print (highlyDivisibleTriangularNumber 500)
-  print (highlyDivisibleTriangularNumber 501)
-
-
-primeFactors input = primeFactors' input primes
-
-primeFactors' _ [] = []
-primeFactors' input (x:xs) 
-  | x * x > input = [input]
-  | r == 0 = x : primeFactors' q (x:xs)
-  | otherwise = primeFactors' input xs
-  where (q, r) = quotRem input x
-
-
--- countFactors :: [[a]] -> Int
-countFactors input = sum factors * length factors
-  where factors = [length x | x <- input]
-
-amountOfFactors x = countFactors (group (primeFactors x))
 
